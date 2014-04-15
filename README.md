@@ -1,6 +1,6 @@
-# grunt-html2js
+# grunt-htmlTojs
 
-> Converts AngularJS templates to JavaScript
+> current `grunt-htmlTojs` is only for AngularJS template, but we need a common one.
 
 ## Getting Started
 This plugin requires Grunt `~0.4.0`
@@ -8,38 +8,30 @@ This plugin requires Grunt `~0.4.0`
 If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
 
 ```shell
-npm install grunt-html2js --save-dev
+npm install grunt-htmlTojs --save-dev
 ```
 
 One the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
 
 ```js
-grunt.loadNpmTasks('grunt-html2js');
+grunt.loadNpmTasks('grunt-htmlTojs');
 ```
 
-## The "html2js" task
-
-### Overview
-
-Angular-JS normally loads templates lazily from the server as you reference them in your application (via `ng-include`, routing configuration or other mechanism).  Angular caches the source code for each template so that subsequent references do not require another server request.  However, if your application is divided into many small components, then the initial loading process may involve an unacceptably large number of additional server requests.
-
-This plugin converts a group of templates to JavaScript and assembles them into an Angular module that primes the cache directly when the module is loaded.  You can concatenate this module with your main application code so that Angular does not need to make any additional server requests to initialize the application.
-
-Note that this plugin does *not* compile the templates.  It simply caches the template source code.
+## The "htmlTojs" task
 
 ### Setup
 
 By default, this plugin assumes you are following the naming conventions and build pipeline of the [angular-app][https://github.com/angular-app/angular-app] demo application.
 
-In your project's Gruntfile, add a section named `html2js` to the data object passed into `grunt.initConfig()`.
+In your project's Gruntfile, add a section named `htmlTojs` to the data object passed into `grunt.initConfig()`.
 
 This simplest configuration will assemble all templates in your src tree into a module named `templates-main`, and write the JavaScript source for the module to `tmp/template.js`:
 
 ```js
 grunt.initConfig({
-  html2js: {
+  htmlTojs: {
     options: {
-      // custom options, see below    
+      // custom options, see below
     },
     main: {
       src: ['src/**/*.tpl.html'],
@@ -52,10 +44,7 @@ grunt.initConfig({
 Assuming you concatenate the resulting file with the rest of your application code, you can then specify the module as a dependency in your code:
 
 ```
-angular.module('main', ['templates-main'])
-  .config(['$routeProvider', function ($routeProvidear) {
-    $routeProvider.when('/somepath', {
-      templateUrl:'some/template.tpl.html',
+// generated code here ...
 ```
 
 Note that you should use relative paths to specify the template URL, to
@@ -81,7 +70,7 @@ Language of the output file. Possible values: `'coffee'`, `'js'`.
 
 #### options.module
 Type: `String` or `Function`
-Default value: `templates-TARGET` 
+Default value: `templates-TARGET`
 
 The name of the parent Angular module for each set of templates.  Defaults to the task target prefixed by `templates-`.
 
@@ -105,7 +94,7 @@ function (moduleName) {
 Type: `Character`
 Default value: `"`
 
-Strings are quoted with double-quotes by default.  However, for projects 
+Strings are quoted with double-quotes by default.  However, for projects
 that want strict single quote-only usage, you can specify:
 
 ```
@@ -128,7 +117,7 @@ options: { indentString: '    ' }
 to get, for example, 4-space indents. Same goes for tabs or any other
 indent system you want to use.
 
-#### fileHeaderString: 
+#### fileHeaderString:
 Type: `String`
 Default value: ``
 
@@ -136,7 +125,7 @@ If specified, this string  will get written at the top of the output
 Template.js file. As an example, jshint directives such as
 /* global angular: false */ can be put at the head of the file.
 
-#### fileFooterString: 
+#### fileFooterString:
 Type: `String`
 Default value: ``
 
@@ -144,7 +133,7 @@ If specified, this string  will get written at the end of the output
 file.  May be used in conjunction with `fileHeaderString` to wrap
 the output.
 
-#### useStrict: 
+#### useStrict:
 Type: `Boolean`
 Default value: ``
 
