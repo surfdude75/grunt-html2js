@@ -1,5 +1,5 @@
 {
-  "name": "grunt-htmlTojs",
+  "name": "grunt-common-html2js",
   "description": "Compiles html templates to JavaScript",
   "version": "0.3.4",
   "homepage": "https://github.com/winsonwq/grunt-html2js",
@@ -42,7 +42,8 @@
     "grunt": "~0.4.0"
   },
   "keywords": [
-    "gruntplugin"
+    "gruntplugin",
+    "html2js"
   ],
   "dependencies": {
     "html-minifier": "~0.5.4"

@@ -234,5 +234,10 @@ exports.html2js = {
         'expected grunt templates to be processed by a custom function');
 
     test.done();
+  },
+  update_globalname: function (test) {
+    test.expect(1);
+
+    test.done();
   }
 };

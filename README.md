@@ -44,7 +44,10 @@ grunt.initConfig({
 Assuming you concatenate the resulting file with the rest of your application code, you can then specify the module as a dependency in your code:
 
 ```
-// generated code here ...
+;(function (templates, undefined) {
+  templates["test/fixtures/one.tpl.html"] = "1 2 3";
+  templates["test/fixtures/two.tpl.html"] = "Testing";
+})(this.templates = this.templates || {});
 ```
 
 Note that you should use relative paths to specify the template URL, to
@@ -56,39 +59,23 @@ The `dest` property must be a string.  If it is an array, Grunt will fail when a
 
 ### Options
 
-#### options.base
-Type: `String`
-Default value: `'src'`
+#### removed options.base
 
-The prefix relative to the project directory that should be stripped from each template path to produce a module identifier for the template.  For example, a template located at `src/projects/projects.tpl.html` would be identified as just `projects/projects.tpl.html`.
+#### removed options.module
+
+#### removed options.rename
+
+#### options.globalname
+Type: `String`
+Default value: `'templates'`
+
+Update the global name, by default it's on `this.templates`.
 
 #### options.target
 Type: `String`
 Default value: `'js'`
 
 Language of the output file. Possible values: `'coffee'`, `'js'`.
-
-#### options.module
-Type: `String` or `Function`
-Default value: `templates-TARGET`
-
-The name of the parent Angular module for each set of templates.  Defaults to the task target prefixed by `templates-`.
-
-The value of this argument can be a string or a function.  The function should expect the module file path as an argument, and it should return the name to use for the parent Angular module.
-
-If no bundle module is desired, set this to false.
-
-#### options.rename
-Type: `Function`
-Default value: `none`
-
-A function that takes in the module identifier and returns the renamed module identifier to use instead for the template.  For example, a template located at `src/projects/projects.tpl.html` would be identified as `/src/projects/projects.tpl` with a rename function defined as:
-
-```
-function (moduleName) {
-  return '/' + moduleName.replace('.html', '');
-}
-```
 
 #### options.quoteChar
 Type: `Character`
@@ -103,7 +90,7 @@ options: { quoteChar: '\'' }
 
 to use single quotes, or any other odd quoting character you want
 
-#### indentString
+#### options.indentString
 Type: `String`
 Default value: `  `
 
@@ -117,7 +104,7 @@ options: { indentString: '    ' }
 to get, for example, 4-space indents. Same goes for tabs or any other
 indent system you want to use.
 
-#### fileHeaderString:
+#### options.fileHeaderString:
 Type: `String`
 Default value: ``
 
@@ -125,7 +112,7 @@ If specified, this string  will get written at the top of the output
 Template.js file. As an example, jshint directives such as
 /* global angular: false */ can be put at the head of the file.
 
-#### fileFooterString:
+#### options.fileFooterString:
 Type: `String`
 Default value: ``
 
@@ -133,7 +120,7 @@ If specified, this string  will get written at the end of the output
 file.  May be used in conjunction with `fileHeaderString` to wrap
 the output.
 
-#### useStrict:
+#### options.useStrict:
 Type: `Boolean`
 Default value: ``
 
@@ -144,7 +131,7 @@ module.  Useful for global strict jshint settings.
 options: { useStrict: true }
 ```
 
-#### htmlmin:
+#### options.htmlmin:
 Type: `Object`
 Default value: {}
 
@@ -165,7 +152,7 @@ options: {
 }
 ```
 
-#### process:
+#### options.process:
 Type: `Object` or `Boolean` or `Function`
 Default value: `false`
 
@@ -186,30 +173,4 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
-0.1.1 Build module even if templates do not exist yet
-
-0.1.2 Preserve line feeds in templates to avoid breaking &lt;pre>-formatted text
-
-0.1.3 Add option to set the `module` option to null to disable creation of bundle module
-
-0.1.4 Add rename option
-
-0.1.5 Add config options for quoteChar, indentString and fileHeaderString (thanks @jonathana)
-
-0.1.6 Add support for CoffeeScript (thanks @srigi)
-
-0.1.7 Escape backslashes in template source (issue #11, thanks @JoakimBe)
-
-0.1.8 Add fileFooterString option (issue #13, thanks @duro)
-
-0.1.9 Add useStrict option (pull request #15, thanks @marcoose)
-
-0.2.0 Add htmlmin option (pull request #16, thanks @buberdds)
-
-0.2.1 Fix dependencies for htmlmin (pull request #17, vielen dank @mlegenhausen)
-
-0.2.2 Fix counter of converted files (pull request #18, thanks @srigi)
-
-0.2.3 Add option to interpret 'module' as function (pull request #20, thanks @CodingGorilla)
-
-0.2.4 Add `process` option (pull request #24, thanks @scottrippey)
+0.3.4 make it suitable for common html template converting.

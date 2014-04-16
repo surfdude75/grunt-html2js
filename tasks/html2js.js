@@ -84,6 +84,7 @@ module.exports = function(grunt) {
 
     var options = this.options({
       quoteChar: '"',
+      globalname: 'templates',
       fileHeaderString: '',
       fileFooterString: '',
       indentString: '  ',
@@ -116,7 +117,8 @@ module.exports = function(grunt) {
       var fileFooter = options.fileFooterString !== '' ? options.fileFooterString + '\n' : '';
       var strict = (options.useStrict) ? options.indentString + options.quoteChar + 'use strict' + options.quoteChar + ';\n' : '';
       var bundle = "";
-      var globalExports = "this.templates = this.templates || {}";
+      var globalTemplates = 'this.' + options.globalname;
+      var globalExports = globalTemplates + ' = ' + globalTemplates + ' || {}';
 
       if (options.target === 'js') {
         bundle = ';(function (templates, undefined) {\n' + strict + options.indentString + modules + '\n})(' + globalExports + ');';
