@@ -59,44 +59,31 @@ module.exports = function(grunt) {
       } catch (err) {
         grunt.warn(filepath + '\n' + err);
       }
-    } 
+    }
 
     return escapeContent(content, quoteChar, indentString);
   };
 
   // compile a template to an angular module
-  var compileTemplate = function(moduleName, filepath, quoteChar, indentString, useStrict, htmlmin, process) {
-
+  var compileTemplate = function(filepath, quoteChar, indentString, useStrict, htmlmin, process) {
     var content = getContent(filepath, quoteChar, indentString, htmlmin, process);
-    var doubleIndent = indentString + indentString;
-    var strict = (useStrict) ? indentString + quoteChar + 'use strict' + quoteChar + ';\n' : '';
-
-    var module = 'angular.module(' + quoteChar + moduleName +
-      quoteChar + ', []).run([' + quoteChar + '$templateCache' + quoteChar + ', function($templateCache) ' +
-      '{\n' + strict + indentString + '$templateCache.put(' + quoteChar + moduleName + quoteChar + ',\n' + doubleIndent  + quoteChar +  content +
-       quoteChar + ');\n}]);\n';
+    var module = 'exports.templates[' + quoteChar + filepath + quoteChar + '] = ' + quoteChar + content + quoteChar + ';';
 
     return module;
   };
 
   // compile a template to an angular module
-  var compileCoffeeTemplate = function(moduleName, filepath, quoteChar, indentString, htmlmin, process) {
+  var compileCoffeeTemplate = function(filepath, quoteChar, indentString, htmlmin, process) {
     var content = getContent(filepath, quoteChar, indentString, htmlmin, process);
-    var doubleIndent = indentString + indentString;
-
-    var module = 'angular.module(' + quoteChar + moduleName +
-      quoteChar + ', []).run([' + quoteChar + '$templateCache' + quoteChar + ', ($templateCache) ->\n' +
-      indentString + '$templateCache.put(' + quoteChar + moduleName + quoteChar + ',\n' + doubleIndent  + quoteChar +  content +
-      quoteChar + ')\n])\n';
+    var module = '_exports.templates[' + quoteChar + filepath + quoteChar + '] = ' + quoteChar + content + quoteChar + ';';
 
     return module;
   };
 
-  grunt.registerMultiTask('html2js', 'Compiles Angular-JS templates to JavaScript.', function() {
+  grunt.registerMultiTask('html2js', 'Compiles html templates to JavaScript.', function() {
 
     var options = this.options({
-      base: 'src',
-      module: 'templates-' + this.target,
+      base: 'views',
       quoteChar: '"',
       fileHeaderString: '',
       fileFooterString: '',
@@ -117,15 +104,10 @@ module.exports = function(grunt) {
 
       var modules = f.src.filter(existsFilter).map(function(filepath) {
 
-        var moduleName = normalizePath(path.relative(options.base, filepath));
-        if (grunt.util.kindOf(options.rename) === 'function') {
-          moduleName = options.rename(moduleName);
-        }
-        moduleNames.push("'" + moduleName + "'");
         if (options.target === 'js') {
-          return compileTemplate(moduleName, filepath, options.quoteChar, options.indentString, options.useStrict, options.htmlmin, options.process);
+          return compileTemplate(filepath, options.quoteChar, options.indentString, options.useStrict, options.htmlmin, options.process);
         } else if (options.target === 'coffee') {
-          return compileCoffeeTemplate(moduleName, filepath, options.quoteChar, options.indentString, options.htmlmin, options.process);
+          return compileCoffeeTemplate(filepath, options.quoteChar, options.indentString, options.htmlmin, options.process);
         } else {
           grunt.fail.fatal('Unknow target "' + options.target + '" specified');
         }
@@ -133,26 +115,20 @@ module.exports = function(grunt) {
       });
 
       counter += modules.length;
-      modules  = modules.join('\n');
+      modules  = modules.join('\n' + options.indentString);
 
       var fileHeader = options.fileHeaderString !== '' ? options.fileHeaderString + '\n' : '';
       var fileFooter = options.fileFooterString !== '' ? options.fileFooterString + '\n' : '';
+      var strict = (options.useStrict) ? options.indentString + options.quoteChar + 'use strict' + options.quoteChar + ';\n' : '';
       var bundle = "";
-      var targetModule = f.module || options.module;
-      // If options.module is a function, use that to get the targetModule
-      if (grunt.util.kindOf(targetModule) === 'function') {
-	targetModule = targetModule(f);
-      }
-      //Allow a 'no targetModule if module is null' option
-      if (targetModule) {
-        bundle = "angular.module('" + targetModule + "', [" + moduleNames.join(', ') + "])";
-        if (options.target === 'js') {
-          bundle += ';';
-        }
 
-        bundle += "\n\n";
+      if (options.target === 'js') {
+        bundle = ';(function (exports, undefined) {\n' + strict + options.indentString + modules + '\n})(this);';
+      } else if (options.target === 'coffee') {
+        bundle = '((_exports, _undefined) -> \n' + strict + options.indentString + modules + '\n' + options.indentString + 'return;\n)(this);';
       }
-      grunt.file.write(f.dest, grunt.util.normalizelf(fileHeader + bundle + modules + fileFooter));
+
+      grunt.file.write(f.dest, grunt.util.normalizelf(fileHeader + bundle + fileFooter));
     });
     //Just have one output, so if we making thirty files it only does one line
     grunt.log.writeln("Successfully converted "+(""+counter).green +

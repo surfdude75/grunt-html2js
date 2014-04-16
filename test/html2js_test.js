@@ -22,11 +22,16 @@ var grunt = require('grunt');
     test.ifError(value)
 */
 
+var minify = function (str) {
+  return str.replace(/\s/g, '');
+};
+
 var assertFileContentsEqual = function(test, actualFile, expectedFile, message) {
 
   var actual = grunt.file.read(actualFile);
   var expected = grunt.util.normalizelf(grunt.file.read(expectedFile));
-  test.equal(actual, expected, message);
+
+  test.equal(minify(actual), minify(expected), message);
 };
 
 exports.html2js = {
@@ -179,26 +184,6 @@ exports.html2js = {
     assertFileContentsEqual(test, 'tmp/file_header.js',
         'test/expected/file_header.js',
         'expected compiled template module');
-
-    test.done();
-  },
-  rename: function(test) {
-
-    test.expect(1);
-
-    assertFileContentsEqual(test, 'tmp/rename.js',
-          'test/expected/rename.js',
-          'expected compiled template module');
-
-    test.done();
-  },
-  module_as_function: function(test) {
-
-    test.expect(1);
-
-    assertFileContentsEqual(test, 'tmp/module_as_function.js',
-          'test/expected/module_as_function.js',
-          'expected compiled template module');
 
     test.done();
   },

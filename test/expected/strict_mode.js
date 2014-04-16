@@ -1,7 +1,4 @@
-angular.module('templates-strict_mode', ['../test/fixtures/one.tpl.html']);
-
-angular.module("../test/fixtures/one.tpl.html", []).run(["$templateCache", function($templateCache) {
+;(function (exports, undefined) {
   "use strict";
-  $templateCache.put("../test/fixtures/one.tpl.html",
-    "1 2 3");
-}]);
+  exports.templates["test/fixtures/one.tpl.html"] = "1 2 3";
+})(this);

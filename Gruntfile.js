@@ -144,26 +144,6 @@ module.exports = function(grunt) {
         dest: 'tmp/file_header.js'
       },
 
-      rename: {
-        options: {
-          rename: function(moduleName) {
-            return moduleName.replace('.html', '');
-          }
-        },
-        src: ['test/fixtures/one.tpl.html', 'test/fixtures/two.tpl.html'],
-        dest: 'tmp/rename.js'
-      },
-
-      module_as_function: {
-        options: {
-          module: function(file) {
-            return "NAME_FROM_FUNCTION";
-          }
-        },
-        src: ['test/fixtures/one.tpl.html', 'test/fixtures/two.tpl.html'],
-        dest: 'tmp/module_as_function.js'
-      },
-
       coffee: {
         options: {
           target: 'coffee'
@@ -171,7 +151,7 @@ module.exports = function(grunt) {
         src: ['test/fixtures/one.tpl.html', 'test/fixtures/two.tpl.html'],
         dest: 'tmp/coffee.coffee'
       },
-      
+
       strict_mode: {
         options: {
           useStrict: true
