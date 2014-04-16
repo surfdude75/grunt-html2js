@@ -1,7 +1,7 @@
 /* global angular: false */
 
-;(function (exports, undefined) {
-  exports.templates["test/fixtures/three.tpl.html"] = "Multiple\n" +
+;(function (templates, undefined) {
+  templates["test/fixtures/three.tpl.html"] = "Multiple\n" +
     "Lines\n" +
     "";
-})(this);
+})(this.templates = this.templates || {});

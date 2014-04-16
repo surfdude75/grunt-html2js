@@ -64,19 +64,11 @@ module.exports = function(grunt) {
       },
 
       compact_format_custom_options: {
-        options: {
-          base: 'test',
-          module: 'my-custom-template-module'
-        },
         src: ['test/fixtures/one.tpl.html', 'test/fixtures/two.tpl.html'],
         dest: 'tmp/compact_format_custom_options.js'
       },
 
       files_object_custom_options: {
-        options: {
-          base: 'test',
-          module: 'my-custom-template-module'
-        },
         files: {
           'tmp/files_object_custom_options_1.js': ['test/fixtures/one.tpl.html'],
           'tmp/files_object_custom_options_2.js': ['test/fixtures/two.tpl.html']
@@ -84,10 +76,6 @@ module.exports = function(grunt) {
       },
 
       files_array_custom_options: {
-        options: {
-          base: 'test',
-          module: 'my-custom-template-module'
-        },
         files: [
           {
             dest: 'tmp/files_array_custom_options_1.js',

@@ -1,4 +1,4 @@
-;(function (exports, undefined) {
+;(function (templates, undefined) {
   "use strict";
-  exports.templates["test/fixtures/one.tpl.html"] = "1 2 3";
-})(this);
+  templates["test/fixtures/one.tpl.html"] = "1 2 3";
+})(this.templates = this.templates || {});

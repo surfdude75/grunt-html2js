@@ -67,7 +67,7 @@ module.exports = function(grunt) {
   // compile a template to an angular module
   var compileTemplate = function(filepath, quoteChar, indentString, useStrict, htmlmin, process) {
     var content = getContent(filepath, quoteChar, indentString, htmlmin, process);
-    var module = 'exports.templates[' + quoteChar + filepath + quoteChar + '] = ' + quoteChar + content + quoteChar + ';';
+    var module = 'templates[' + quoteChar + filepath + quoteChar + '] = ' + quoteChar + content + quoteChar + ';';
 
     return module;
   };
@@ -75,7 +75,7 @@ module.exports = function(grunt) {
   // compile a template to an angular module
   var compileCoffeeTemplate = function(filepath, quoteChar, indentString, htmlmin, process) {
     var content = getContent(filepath, quoteChar, indentString, htmlmin, process);
-    var module = '_exports.templates[' + quoteChar + filepath + quoteChar + '] = ' + quoteChar + content + quoteChar + ';';
+    var module = 'templates[' + quoteChar + filepath + quoteChar + '] = ' + quoteChar + content + quoteChar + ';';
 
     return module;
   };
@@ -83,7 +83,6 @@ module.exports = function(grunt) {
   grunt.registerMultiTask('html2js', 'Compiles html templates to JavaScript.', function() {
 
     var options = this.options({
-      base: 'views',
       quoteChar: '"',
       fileHeaderString: '',
       fileFooterString: '',
@@ -97,10 +96,6 @@ module.exports = function(grunt) {
 
     // generate a separate module
     this.files.forEach(function(f) {
-
-      // f.dest must be a string or write will fail
-
-      var moduleNames = [];
 
       var modules = f.src.filter(existsFilter).map(function(filepath) {
 
@@ -121,11 +116,12 @@ module.exports = function(grunt) {
       var fileFooter = options.fileFooterString !== '' ? options.fileFooterString + '\n' : '';
       var strict = (options.useStrict) ? options.indentString + options.quoteChar + 'use strict' + options.quoteChar + ';\n' : '';
       var bundle = "";
+      var globalExports = "this.templates = this.templates || {}";
 
       if (options.target === 'js') {
-        bundle = ';(function (exports, undefined) {\n' + strict + options.indentString + modules + '\n})(this);';
+        bundle = ';(function (templates, undefined) {\n' + strict + options.indentString + modules + '\n})(' + globalExports + ');';
       } else if (options.target === 'coffee') {
-        bundle = '((_exports, _undefined) -> \n' + strict + options.indentString + modules + '\n' + options.indentString + 'return;\n)(this);';
+        bundle = '((templates, _undefined) -> \n' + strict + options.indentString + modules + '\n' + options.indentString + 'return;\n)(' + globalExports + ');';
       }
 
       grunt.file.write(f.dest, grunt.util.normalizelf(fileHeader + bundle + fileFooter));
