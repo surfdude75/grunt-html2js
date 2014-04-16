@@ -237,7 +237,9 @@ exports.html2js = {
   },
   update_globalname: function (test) {
     test.expect(1);
-
+    assertFileContentsEqual(test, 'tmp/update_globalname.js',
+        'test/expected/update_globalname.js',
+        'expected grunt templates to use updated globalname');
     test.done();
   }
 };

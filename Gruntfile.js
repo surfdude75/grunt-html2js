@@ -33,6 +33,14 @@ module.exports = function(grunt) {
     // for configuration options that need to be tested
     html2js: {
 
+      update_globalname: {
+        options: {
+          globalname: '__templates',
+        },
+        src: ['test/fixtures/one.tpl.html'],
+        dest: 'tmp/update_globalname.js'
+      },
+
       regex_in_template: {
         src: ['test/fixtures/pattern.tpl.html'],
         dest: 'tmp/regex_in_template.js'
