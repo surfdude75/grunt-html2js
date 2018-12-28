@@ -117,7 +117,7 @@ module.exports = function(grunt) {
       var fileFooter = options.fileFooterString !== '' ? options.fileFooterString + '\n' : '';
       var strict = (options.useStrict) ? options.indentString + options.quoteChar + 'use strict' + options.quoteChar + ';\n' : '';
       var bundle = "";
-      var globalTemplates = 'this.' + options.globalname;
+      var globalTemplates = options.globalname;
       var globalExports = globalTemplates + ' = ' + globalTemplates + ' || {}';
 
       if (options.target === 'js') {
